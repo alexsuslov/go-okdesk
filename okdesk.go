@@ -32,6 +32,7 @@ import (
 )
 
 type OKD struct {
+	host                 string
 	GetIssue             fnIdRes
 	SetIssueAssignee     fnIdReqRes
 	CreateIssue          fnReqRes
@@ -62,7 +63,7 @@ type OKD struct {
 
 func New() OKD {
 	host := os.Getenv("OKDESK_URL")
-	okd := OKD{}
+	okd := OKD{host: host}
 	// https://okdesk.ru/apidoc#!sozdanie-zayavki-sozdanie-zayavki
 	okd.CreateIssue = ReqRes("POST", host+issuesPath)
 
