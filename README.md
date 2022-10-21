@@ -5,5 +5,7 @@
   sd:=OKD{}
   result:=[]int{}
   err := sd.GetIssueCount(context.Background(), &result)
-  panic(err)
+  if err!=nil{
+    panic(err)
+  }
 ```
