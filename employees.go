@@ -20,6 +20,8 @@
 
 package okdesk
 
+import "context"
+
 const (
 	employeesPath           = "/employees/"
 	employeesListPath       = "/employees/list"
@@ -29,3 +31,65 @@ const (
 	employerGroupsPath      = "/employees/%s/groups"
 	employerRoutesPath      = "/employees/routes"
 )
+
+func (OKD OKD) CreateEmployer(ctx context.Context, CreateEmployer interface{}, response interface{}) error {
+	return OKD.ReqRes("POST", employeesPath)(ctx, CreateEmployer, response)
+}
+
+func (OKD OKD) SetEmployer(ctx context.Context,
+	EmployerID string, UpdateEmployer interface{}, response interface{}) error {
+
+	return OKD.IdReqRes("PATCH", employerPath)(ctx, EmployerID, UpdateEmployer, response)
+}
+
+func (OKD OKD) SetEmployerActivation(ctx context.Context,
+	EmployerID string, UpdateActivation UpdateActivation, response interface{}) error {
+
+	return OKD.IdReqRes("PATCH", employerActivationsPath)(ctx, EmployerID, UpdateActivation, response)
+}
+
+type UpdateActivation struct {
+	Active bool `json:"active"`
+}
+
+func (OKD OKD) SetEmployerRoles(ctx context.Context, response interface{}) error {
+
+	return OKD.Res("GET", employerRolesPath)(ctx, response)
+}
+
+func (OKD OKD) SetEmployerRoutes(ctx context.Context, response interface{}) error {
+
+	return OKD.Res("GET", employerRoutesPath)(ctx, response)
+}
+
+func (OKD OKD) SetEmployerGroups(ctx context.Context, response interface{}) error {
+
+	return OKD.Res("GET", employerGroupsPath)(ctx, response)
+}
+
+func (OKD OKD) SetEmployerList(ctx context.Context, query map[string][]string, response interface{}) error {
+
+	return OKD.ValRes("GET", employeesListPath)(ctx, query, response)
+}
+
+type ResponseEmployerList []struct {
+	ID              int    `json:"id"`
+	LastName        string `json:"last_name"`
+	FirstName       string `json:"first_name"`
+	Patronymic      string `json:"patronymic"`
+	Position        string `json:"position"`
+	Active          bool   `json:"active"`
+	Email           string `json:"email"`
+	Login           string `json:"login"`
+	Phone           string `json:"phone"`
+	TelephonyNumber string `json:"telephony_number"`
+	Comment         string `json:"comment"`
+	Groups          []struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"groups"`
+	Roles []struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"roles"`
+}

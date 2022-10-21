@@ -25,138 +25,46 @@ import (
 	"testing"
 )
 
-func TestGetIssueParameters(t *testing.T) {
-	godotenv.Load(".env")
+func load() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestOKD_GetIssueCount(t *testing.T) {
+	load()
+	type fields struct {
+		host string
+	}
 	type args struct {
-		ctx        context.Context
-		parameters []IssueParameter
+		ctx      context.Context
+		response interface{}
 	}
 	tests := []struct {
 		name    string
+		fields  fields
 		args    args
 		wantErr bool
 	}{
 		{
-			"get parametrs",
+			"GetIssueCount",
+			fields{godotenv.GetPanic("OKDESK_URL")},
 			args{
 				context.Background(),
-				[]IssueParameter{},
+				&[]int{},
 			},
 			false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := GetIssueParameters(tt.args.ctx, tt.args.parameters); (err != nil) != tt.wantErr {
-				t.Errorf("GetIssueParameters() error = %v, wantErr %v", err, tt.wantErr)
+			OKD := OKD{
+				host: tt.fields.host,
 			}
-		})
-	}
-}
-
-func TestGetIssues(t *testing.T) {
-	godotenv.Load(".env")
-	type args struct {
-		ctx        context.Context
-		Parameters *[]int
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			"get issues",
-			args{context.Background(), &[]int{}},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := GetIssueCount(tt.args.ctx, tt.args.Parameters)
+			err := OKD.GetIssueCount(tt.args.ctx, tt.args.response)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetIssues() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestGetIssueList(t *testing.T) {
-	godotenv.Load(".env")
-	type args struct {
-		ctx      context.Context
-		Response *[]IssueListItem
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			"get issues",
-			args{context.Background(), &[]IssueListItem{}},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := GetIssueList(tt.args.ctx, tt.args.Response)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetIssueList() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestGetIssuePriorities(t *testing.T) {
-	godotenv.Load(".env")
-	type args struct {
-		ctx      context.Context
-		Response *[]IssuePriority
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			"get Priorities",
-			args{context.Background(), &[]IssuePriority{}},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := GetIssuePriorities(tt.args.ctx, tt.args.Response)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetIssuePriorities() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestGetIssueStatuses(t *testing.T) {
-	godotenv.Load(".env")
-	type args struct {
-		ctx      context.Context
-		Response *[]IssueStatus
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{
-			"get Priorities",
-			args{context.Background(), &[]IssueStatus{}},
-			false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := GetIssueStatuses(tt.args.ctx, tt.args.Response)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetIssueStatuses() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetIssueCount() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

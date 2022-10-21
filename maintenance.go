@@ -20,9 +20,53 @@
 
 package okdesk
 
+import "context"
+
 const (
 	entitiesPath          = "/maintenance_entities/"
 	entityPath            = "/maintenance_entities/%1"
 	entityListPath        = "/maintenance_entities/list"
 	entityAttachmentsPath = "/maintenance_entities/%s/attachments/"
 )
+
+// https://okdesk.ru/apidoc#!obekty-obsluzhivaniya-poisk-obekta-obsluzhivaniya
+
+func (OKD OKD) FindMaintenancesEntity(ctx context.Context, query map[string][]string, response interface{}) error {
+	return OKD.ValRes("GET", entitiesPath)(ctx, query, response)
+}
+
+// https://okdesk.ru/apidoc#!obekty-obsluzhivaniya-sozdanie-obekta-obsluzhivaniya
+
+func (OKD OKD) CreateMaintenanceEntity(ctx context.Context, IssueTimeEntry, response interface{}) error {
+	return OKD.ReqRes("POST", entitiesPath)(ctx, IssueTimeEntry, response)
+}
+
+func (OKD OKD) SetMaintenanceEntity(ctx context.Context, MaintenanceEntityID, MaintenanceEntity, response interface{}) error {
+	return OKD.IdReqRes("PATCH", entityPath)(ctx, MaintenanceEntityID, MaintenanceEntity, response)
+}
+
+// https://okdesk.ru/apidoc#!informacziya-ob-obekte-obsluzhivaniya-informacziya-ob-obekte-obsluzhivaniya
+
+func (OKD OKD) GetMaintenanceEntity(ctx context.Context, MaintenanceEntityID, response interface{}) error {
+	return OKD.IdRes("GET", entityPath)(ctx, MaintenanceEntityID, response)
+}
+
+//https://okdesk.ru/apidoc#!poluchenie-spiska-obektov-obsluzhivaniya-poluchenie-spiska-po-parametram
+
+func (OKD OKD) GetMaintenanceEntityList(ctx context.Context, query map[string][]string, response interface{}) error {
+	return OKD.ValRes("GET", entityListPath)(ctx, query, response)
+}
+
+// https://okdesk.ru/apidoc#!dobavleniya-fajla-k-obektu-obsluzhivaniya-dobavleniya-fajla-k-obektu-obsluzhivaniya
+/** todo: Добавления файла к объекту обслуживания
+
+curl  -H "Content-Type: multipart/form-data"
+-F "maintenance_entity[attachments][0][attachment]=@/home/user/file.jpg"
+-F "maintenance_entity[attachments][0][is_public]=true"
+-F "maintenance_entity[attachments][0][description]=Описание"
+https://<account>.okdesk.ru/api/v1/maintenance_entities/{id}/attachments/{?api_token}
+
+где @/home/user/file.jpg — это путь к локальному файлу
+пример для windows: @"C:/myfile.txt"
+
+*/

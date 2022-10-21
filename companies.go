@@ -33,7 +33,7 @@ const (
 )
 
 func (OKD OKD) FindCompany(ctx context.Context, query map[string][]string, response interface{}) error {
-	return ValRes("GET", OKD.host+companiesPath)(ctx, query, response)
+	return OKD.ValRes("GET", OKD.host+companiesPath)(ctx, query, response)
 }
 
 type ResponseFindCompany struct {
@@ -79,7 +79,7 @@ type ResponseFindCompany struct {
 }
 
 func (OKD OKD) CreateCompany(ctx context.Context, CreateCompany interface{}, response interface{}) error {
-	return ReqRes("POST", companiesPath)(ctx, CreateCompany, response)
+	return OKD.ReqRes("POST", companiesPath)(ctx, CreateCompany, response)
 }
 
 type CreateCompany struct {
@@ -142,7 +142,7 @@ type ResponseCreateCompany struct {
 func (OKD OKD) SetCompany(ctx context.Context,
 	CompanyID string, UpdateCompany interface{}, response interface{}) error {
 
-	return IdReqRes("POST", companyPath)(ctx, CompanyID, UpdateCompany, response)
+	return OKD.IdReqRes("PATCH", companyPath)(ctx, CompanyID, UpdateCompany, response)
 }
 
 type UpdateCompany struct {
@@ -210,7 +210,7 @@ type ResponseUpdateCompany struct {
 func (OKD OKD) GetCompanyList(ctx context.Context,
 	Query map[string][]string, response []interface{}) error {
 
-	return ValRes("POST", companyListPath)(ctx, Query, response)
+	return OKD.ValRes("POST", companyListPath)(ctx, Query, response)
 }
 
 type ResponseCompany struct {
@@ -228,7 +228,7 @@ type ResponseCompany struct {
 func (OKD OKD) GetCompanyAttachment(ctx context.Context,
 	companyID, attachmentID string, response []interface{}) error {
 
-	return IdIdRes("GET", companyAttachmentsPath)(ctx, companyID, attachmentID, response)
+	return OKD.IdIdRes("GET", companyAttachmentsPath)(ctx, companyID, attachmentID, response)
 }
 
 type ResponseCompanyAttachment struct {
