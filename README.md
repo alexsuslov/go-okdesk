@@ -1,4 +1,12 @@
 # go-okdesk
+## Env
+```
+cp default.env .env
+```
+## Add okdesk token 
+```
+micro .env
+```
 
 ## GetIssueCount
 ```
